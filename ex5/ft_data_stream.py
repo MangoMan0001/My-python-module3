@@ -3,7 +3,7 @@ import random
 import time
 
 
-def game_event_generater(num_event: int) -> str:
+def game_event_generater(num_event: int) -> object:
     """ランダムでイベントを生成"""
 
     # 1.イベントデータ
@@ -24,7 +24,7 @@ def game_event_generater(num_event: int) -> str:
         yield event
 
 
-def put_fibonacci(num: int) -> int:
+def put_fibonacci(num: int) -> object:
     """gen_fibonacci"""
 
     a = 0
@@ -34,7 +34,7 @@ def put_fibonacci(num: int) -> int:
         a, b = b, a + b
 
 
-def put_prime(num: int) -> int:
+def put_prime(num: int) -> object:
     """gen_prime"""
 
     count = 0
