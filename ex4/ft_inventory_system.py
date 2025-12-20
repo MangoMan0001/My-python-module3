@@ -38,7 +38,7 @@ def main() -> None:
         },
         "magic_ring": {
             "Name": "magic_ring",
-            "Rariry": "rare",
+            "Rarity": "rare",
             "Type": "magic",
             "Gold": 100,
             "Amount": 1
@@ -87,22 +87,24 @@ def main() -> None:
     print(f"Categories: weapon({weapon}), "
           f"consumable({consumble}), armor({armor})"
           )
+    print()
 
     # 4.AliceからBobにポーションを渡す
     print("=== Transaction: Alice gives Bob 2 potions ===")
     alice["potion"]["Amount"] -= 2
-    alice["info"]["golds"] = \
-        alice["potion"]["Gold"] * alice["potion"]["Amount"]
-    bob.update(alice["potion"])
-    bob["potion"]["Amount"] += 2
-    bob["golds"] = bob["potion"]["gold"] * bob["potion"]["amount"]
+    alice["info"]["golds"] -= \
+        alice["potion"]["Gold"] * 2
+    alice["info"]["total_amount"] -= 2
+    bob["potion"] = alice["potion"].copy()
+    bob["potion"]["Amount"] = 2
+    bob["info"]["golds"] = bob["potion"]["Gold"] * bob["potion"]["Amount"]
     print("Transaction successful!")
     print()
 
     # 5.改めてポーション数を出力
     print("=== Updated Inventories ===")
-    print(f'Alice potions: {alice["Potion"].get("Amount")}')
-    print(f'Bob potions: {bob["Potion"].get("Amount")}')
+    print(f'Alice potions: {alice["potion"].get("Amount")}')
+    print(f'Bob potions: {bob["potion"].get("Amount")}')
     print()
 
     # 6.=== Inventory Analytics ===
@@ -110,14 +112,24 @@ def main() -> None:
     players = {"Alice": alice, "Bob": bob}
     rare_item = set()
     gold_champion = "Alice"
+    amount_champion = "Alice"
     for player_name, inventry in players.items():
-        if players[gold_champion].get(gold) < inventry["gold"]:
-            champion = player_name
+        if players[gold_champion]["info"]["golds"] < inventry["info"]["golds"]:
+            gold_champion = player_name
+        if players[amount_champion]["info"]["total_amount"] < \
+                inventry["info"]["total_amount"]:
+            amount_champion = player_name
         for item_name, item_data in inventry.items():
-            if item_data["Rarity"] == "rare":
-                rare_item += item_name
+            try:
+                if item_data["Rarity"] == "rare":
+                    rare_item.add(item_name)
+            except KeyError:
+                continue
     print(f"Most valuable player: "
-          f'{champion} ({players[gold_champion].get("gold")} gold)')
+          f'{gold_champion} ({players[gold_champion]["info"]["golds"]} gold)')
+    print(f'Most items: {amount_champion} '
+          f'({players[amount_champion]["info"]["total_amount"]} items)')
+    print(f'Rarest items: {rare_item}')
 
 
 if __name__ == "__main__":
