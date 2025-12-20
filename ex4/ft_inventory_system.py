@@ -5,8 +5,10 @@ def main() -> None:
 
     # 1.インベントリ作成
     alice = {
-        "golds": 950,
-        "total_amount": 7,
+        "info": {
+            "golds": 950,
+            "total_amount": 7,
+        },
         "sword": {
             "Name": "sword",
             "Rarity": "rare",
@@ -30,8 +32,10 @@ def main() -> None:
         }
     }
     bob = {
-        "golds": 100,
-        "total_amount": 1,
+        "info": {
+            "golds": 100,
+            "total_amount": 1,
+        },
         "magic_ring": {
             "Name": "magic_ring",
             "Rariry": "rare",
@@ -44,17 +48,19 @@ def main() -> None:
     # 2.<アリス> アイテムごとのゴールド計算
     print("=== Alice's Inventory ===")
     for data in alice.values():
+        try:
+            name = data["Name"]
+            rarity = data["Rarity"]
+            type = data["Type"]
+            gold = data["Gold"]
+            amount = data["Amount"]
 
-        name = data["Name"]
-        rarity = data["Rarity"]
-        type = data["Type"]
-        gold = data["Gold"]
-        amount = data["Amount"]
-
-        golds = gold * amount
-        print(f'{name} ({type}, {rarity}): '
-              f'{amount}x @ {gold} gold each = {golds} gold'
-              )
+            golds = gold * amount
+            print(f'{name} ({type}, {rarity}): '
+                  f'{amount}x @ {gold} gold each = {golds} gold'
+                  )
+        except KeyError:
+            continue
     print()
 
     # 3.<アリス> 総ゴールド、総アイテム数計算
@@ -64,16 +70,19 @@ def main() -> None:
     consumble = 0
     armor = 0
     for data in alice.values():
-        golds += data["Gold"] * data[amount]
-        amount += data["Amount"]
-        if data["Type"] == "weapon":
-            weapon += 1
-        if data["Type"] == "consumable":
-            consumble += 1
-        if data["Type"] == "armor":
-            armor += 1
-    alice["golds"] = golds
-    print(f"Inventory value: {alice[golds]} gold")
+        try:
+            golds += data["Gold"] * data["Amount"]
+            amount += data["Amount"]
+            if data["Type"] == "weapon":
+                weapon += data["Amount"]
+            if data["Type"] == "consumable":
+                consumble += data["Amount"]
+            if data["Type"] == "armor":
+                armor += data["Amount"]
+        except KeyError:
+            continue
+    alice["info"]["golds"] = golds
+    print(f'Inventory value: {alice["info"]["golds"]} gold')
     print(f"Item count: {amount} items")
     print(f"Categories: weapon({weapon}), "
           f"consumable({consumble}), armor({armor})"
@@ -82,7 +91,9 @@ def main() -> None:
     # 4.AliceからBobにポーションを渡す
     print("=== Transaction: Alice gives Bob 2 potions ===")
     alice["potion"]["Amount"] -= 2
-    alice["golds"] = alice["potion"]["gold"] * alice["potion"]["amount"]
+    alice["info"]["golds"] = \
+        alice["potion"]["Gold"] * alice["potion"]["Amount"]
+    bob.update(alice["potion"])
     bob["potion"]["Amount"] += 2
     bob["golds"] = bob["potion"]["gold"] * bob["potion"]["amount"]
     print("Transaction successful!")
