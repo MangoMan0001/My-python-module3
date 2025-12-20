@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 def main() -> None:
+    """アチーブメント管理システム"""
+
     print("=== Achievement Tracker System ===")
     print()
 

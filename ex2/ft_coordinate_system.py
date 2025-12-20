@@ -4,7 +4,11 @@ import math
 
 
 def main() -> None:
+    """座標間距離計算"""
+
     print("=== Game Coordinate System ===")
+    print()
+
     ac = len(sys.argv)
     zero_position = (0, 0, 0)
 

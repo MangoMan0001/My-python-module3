@@ -98,12 +98,12 @@ def main() -> None:
           )
 
     event = game_event_generater(1)
-    if type(event).__name__ == "Generator":
+    if type(event).__name__ == "generator":
         mem_str = "Constant (streaming)"
     else:
         mem_str = "Linear (all loaded)"
     print(f"Memory usage: {mem_str}\n"
-          f"Processing time: {end_time - start_time:.2f} seconds\n")
+          f"Processing time: {end_time - start_time:.3f} seconds\n")
 
     # 3.=== Generator Demonstration ===
     print("=== Generator Demonstration ===")
